@@ -1,0 +1,7 @@
+{
+  "name": "redmine-skills",
+  "skills": [
+    "./skills/productivity/redmine-issue-note"
+  ]
+}
+

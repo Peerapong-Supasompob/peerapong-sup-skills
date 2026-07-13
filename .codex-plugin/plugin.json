@@ -1,0 +1,9 @@
+{
+  "name": "redmine-skills",
+  "version": "0.1.0",
+  "description": "Redmine issue note, issue operation, and time logging skills.",
+  "skills": [
+    "./skills/productivity/redmine-issue-note"
+  ]
+}
+
