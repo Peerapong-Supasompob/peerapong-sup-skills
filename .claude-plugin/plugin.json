@@ -1,7 +1,7 @@
 {
-  "name": "redmine-skills",
+  "name": "peerapong-sup-skills",
   "skills": [
+    "./skills/engineering/php-project-env",
     "./skills/productivity/redmine-issue-note"
   ]
 }
-

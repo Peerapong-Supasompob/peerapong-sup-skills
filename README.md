@@ -1,41 +1,28 @@
-# redmine-skills
+# peerapong-sup-skills
 
-Agent skills for Redmine issue notes, issue operations, and time logging.
+Personal agent skills for project workflows.
 
-โครง repo นี้เก็บ skill ทุกตัวไว้ใต้ `skills/` โดยแต่ละ skill เป็น directory ของตัวเองและมี `SKILL.md` พร้อมไฟล์ประกอบ เช่น helper scripts หรือ reference files.
+Each skill lives under `skills/` in its own directory with a `SKILL.md` file and any bundled scripts or reference files.
 
 ## Layout
 
-- `.claude-plugin/plugin.json` - plugin manifest แบบ repo ตัวอย่าง
-- `.codex-plugin/plugin.json` - plugin manifest สำหรับ Codex
-- `scripts/` - scripts สำหรับ list/link/config skill
-- `skills/productivity/redmine-issue-note/` - Redmine skill
+- `.claude-plugin/plugin.json` - Claude-style plugin manifest
+- `.codex-plugin/plugin.json` - Codex plugin manifest
+- `scripts/` - helper scripts for listing, linking, and local configuration
+- `skills/engineering/php-project-env/` - PHP `.env` loading with `vlucas/phpdotenv`
+- `skills/productivity/redmine-issue-note/` - Redmine issue notes, issue operations, and time logging
 
 ## Install
 
-### จาก GitHub
-
-หลัง push repo ขึ้น GitHub แล้วติดตั้งได้ด้วย:
+After this repo is on GitHub:
 
 ```bash
-npx skills add <github-user>/<repo-name>
+npx skills add Peerapong-Supasompob/peerapong-sup-skills
 ```
 
-ตัวอย่าง:
-
-```bash
-npx skills add your-org/redmine-skills
-```
-
-### Local dev loop
+## Local Dev Loop
 
 Windows / Codex:
-
-```powershell
-.\scripts\link-codex-skills.ps1
-```
-
-ถ้าเครื่องบล็อก PowerShell scripts ให้เรียกแบบนี้:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\link-codex-skills.ps1
@@ -47,94 +34,78 @@ macOS/Linux / Claude-style:
 ./scripts/link-skills.sh
 ```
 
-ดูรายการ skill ทั้งหมด:
-
-```bash
-./scripts/list-skills.sh
-```
-
-หรือบน PowerShell:
-
-```powershell
-.\scripts\list-skills.ps1
-```
-
-ถ้าเครื่องบล็อก PowerShell scripts:
+List all skills:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\list-skills.ps1
 ```
 
+```bash
+./scripts/list-skills.sh
+```
+
 ## Universal IDE Setup
 
-ใช้แนวทางเดียวสำหรับ Codex, Cursor, Antigravity, VS Code agents, Windsurf, Continue และ IDE/agent อื่น ๆ:
+Use one instruction path for Codex, Cursor, Antigravity, VS Code agents, Windsurf, Continue, and other IDE agents:
 
-1. เก็บ skill ตัวจริงไว้ที่ `skills/productivity/redmine-issue-note/`
-2. เพิ่ม instruction block กลางลงใน `<project>/AGENTS.md`
-3. ให้ agent อ่าน `AGENTS.md` แล้วเรียก helper script จาก path เดียวกัน
+1. Keep the canonical skill source under `skills/`
+2. Add a project-level instruction block to `<project>/AGENTS.md`
+3. Ask the agent to read `AGENTS.md` before using the workflow
 
-ติดตั้ง instruction block เข้า workspace ปลายทาง:
+Install the Redmine instruction block into a target workspace:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\install-agent-instructions.ps1 -WorkspacePath C:\path\to\project
 ```
 
-หรือบน macOS/Linux:
+or:
 
 ```bash
 ./scripts/install-agent-instructions.sh /path/to/project
 ```
 
-สคริปต์จะสร้างหรืออัปเดต:
+The script creates or updates:
 
 ```text
 <project>/AGENTS.md
 ```
 
-สำหรับ Cursor ถ้า agent ไม่ดึง `AGENTS.md` อัตโนมัติ ให้แนบหรืออ้างถึงไฟล์นี้ใน prompt เช่น:
+For Cursor, if the agent does not load `AGENTS.md` automatically, reference it in the prompt:
 
 ```text
 Read AGENTS.md and use the redmine-issue-note instructions.
 ```
 
-สำหรับ Antigravity ให้เปิด workspace ที่มี `AGENTS.md` อยู่ที่ root.
+For Antigravity, open the workspace that has `AGENTS.md` at the root.
 
 ## Redmine Config
 
-อย่า commit `.env` หรือ API key ขึ้น GitHub ให้ commit เฉพาะ `.env.example`
+Do not commit `.env` or API keys. Commit `.env.example` only.
 
-ตั้งค่า local `.env` หลัง clone:
+Create the local Redmine `.env` after cloning:
 
 ```powershell
 $env:REDMINE_API_KEY = "replace-with-real-key"
-.\scripts\config-redmine.ps1
-```
-
-ถ้าเครื่องบล็อก PowerShell scripts:
-
-```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\config-redmine.ps1
 ```
 
-หรือส่ง key ตรง ๆ:
-
-```powershell
-.\scripts\config-redmine.ps1 -ApiKey "replace-with-real-key"
-```
-
-บน macOS/Linux:
+or:
 
 ```bash
 REDMINE_API_KEY="replace-with-real-key" ./scripts/config-redmine.sh
 ```
 
-ไฟล์ config จะถูกเขียนที่:
+The config file is written to:
 
 ```text
 skills/productivity/redmine-issue-note/.env
 ```
 
 ## Reference
+
+### Engineering
+
+- [php-project-env](./skills/engineering/php-project-env/SKILL.md) - Implement and debug PHP project `.env` loading with `vlucas/phpdotenv`, Docker paths, and safe secret verification.
 
 ### Productivity
 

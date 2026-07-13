@@ -1,9 +1,9 @@
 {
-  "name": "redmine-skills",
+  "name": "peerapong-sup-skills",
   "version": "0.1.0",
-  "description": "Redmine issue note, issue operation, and time logging skills.",
+  "description": "Personal agent skills for PHP project env loading and Redmine workflows.",
   "skills": [
+    "./skills/engineering/php-project-env",
     "./skills/productivity/redmine-issue-note"
   ]
 }
-
