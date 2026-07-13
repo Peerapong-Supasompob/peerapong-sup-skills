@@ -2,7 +2,7 @@
 
 Agent skills for Redmine issue notes, issue operations, and time logging.
 
-โครง repo นี้จัดตามแนวเดียวกับ `thananon/9arm-skills`: skill ทุกตัวอยู่ใต้ `skills/`, แต่ละ skill เป็น directory ของตัวเองและมี `SKILL.md` พร้อมไฟล์ประกอบ เช่น helper scripts หรือ reference files.
+โครง repo นี้เก็บ skill ทุกตัวไว้ใต้ `skills/` โดยแต่ละ skill เป็น directory ของตัวเองและมี `SKILL.md` พร้อมไฟล์ประกอบ เช่น helper scripts หรือ reference files.
 
 ## Layout
 
