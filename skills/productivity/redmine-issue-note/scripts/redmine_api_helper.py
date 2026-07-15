@@ -10,7 +10,6 @@ SKILL_ROOT = Path(__file__).resolve().parent.parent
 
 def _load_dotenv() -> None:
     candidates = [
-        Path.cwd() / ".env",
         SKILL_ROOT / ".env",
     ]
 
@@ -29,8 +28,6 @@ def _load_dotenv() -> None:
 
             if key and key not in os.environ:
                 os.environ[key] = value
-
-        return
 
 
 def _headers():

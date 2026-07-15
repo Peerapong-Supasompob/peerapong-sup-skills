@@ -13,12 +13,19 @@ Use the bundled helper script:
 scripts/redmine_api_helper.py
 ```
 
-The helper loads `REDMINE_API_KEY` from:
+The helper loads `REDMINE_API_KEY` from these sources, in order:
 
-1. `.env` in the current working directory
+1. Existing process environment variable `REDMINE_API_KEY`
 2. `.env` in this skill directory
 
-Keep `.env` out of git. Commit only `.env.example`.
+The helper intentionally does not read project or workspace `.env` files. Keep the Redmine API key isolated in the `redmine-issue-note` skill directory.
+
+If `REDMINE_API_KEY` is missing:
+
+1. Ask the user for the Redmine API access key before attempting Redmine API actions.
+2. When the user provides the key, add or update `REDMINE_API_KEY=<provided key>` in the `redmine-issue-note` skill directory's `.env`.
+3. Do not print, summarize, or expose the key in responses or command output.
+4. Keep `.env` out of git. Commit only `.env.example`.
 
 ## Default Redmine
 
@@ -34,6 +41,177 @@ Keep `.env` out of git. Commit only `.env.example`.
 3. When the user says to do the action now, create payloads and call `scripts/redmine_api_helper.py` instead of replying with draft text only.
 4. After every successful create or update action, include a clickable Redmine issue link using the issue id.
 5. Keep Redmine prose concise, in Thai, and use Textile for `description` or `notes`.
+6. For issue notes and work summaries, use the standard templates below unless the user asks for a different format.
+
+## Draft vs Action
+
+If the user asks for Redmine-formatted text but does not explicitly ask to update Redmine, only generate text in chat. Do not call the API.
+
+Draft-only phrases include:
+
+- "สรุปงานรูปแบบ Redmine"
+- "ช่วยเขียน note สำหรับ Redmine"
+- "ขอข้อความไปใส่ Redmine"
+- "format เป็น Redmine"
+- "เตรียมข้อความลงเวลา"
+
+After a draft-only response, end with one short follow-up asking whether the user wants Codex to perform the Redmine action, for example:
+
+```text
+ต้องการให้ผมอัปเดต Redmine หรือ ลงเวลาทำงานให้เลยไหมครับ?
+```
+
+Only call the Redmine API when the user clearly confirms an action such as updating an issue, creating an issue, or logging time.
+
+## Note Templates
+
+Use these concise Thai Textile templates so Redmine updates are easy to scan. Keep bullets short and concrete. Remove unused placeholder lines instead of leaving filler text.
+
+Format `Issue Note` for readability:
+
+- Start with a short `Issue Note` label outside the code block.
+- Put the note itself in one `textile` code block so it has a copy button.
+- Use 3 short sections: summary, verification, notes.
+- Keep each bullet to one idea and avoid long comma-heavy sentences.
+- Prefer concrete files, modules, commands, and statuses over broad wording.
+- Use `-` for empty notes or no remaining follow-up.
+
+When a response includes both an issue note and spent-time detail, separate them into two copyable blocks:
+
+1. `Issue Note` - the note/description content for Redmine.
+2. `Spent Time Comment` - show time and activity outside the copyable block, then put only the detail text in a copyable block.
+
+Do not merge `เวลาทำงาน` into the issue note block unless the user explicitly asks for a single combined note.
+
+### General Work
+
+Issue Note:
+
+```textile
+สรุปงาน
+
+- [ทำอะไร]
+- [แก้/ปรับส่วนไหน]
+- [ผลลัพธ์ที่ได้]
+
+การตรวจสอบ
+
+- [ทดสอบ/ตรวจสอบอะไร]
+- ผล: [ผ่าน/ไม่ผ่าน/รอทดสอบ]
+
+หมายเหตุ
+
+- [ข้อจำกัด/สิ่งที่ต้องตามต่อ ถ้าไม่มีใส่ -]
+```
+
+Spent Time Comment:
+
+- เวลา: [x] ชม.
+- Activity: [Development/Testing/Support/Research]
+- รายละเอียด:
+
+```textile
+[รายละเอียดสำหรับ comment ตอนลงเวลา]
+```
+
+### Bug Fix
+
+Issue Note:
+
+```textile
+สรุปบัค
+
+- ปัญหา: [...]
+- สาเหตุ: [...]
+- การแก้ไข: [...]
+
+การตรวจสอบ
+
+- ทดสอบซ้ำกรณีที่พบปัญหาแล้ว: [...]
+- ผล: [...]
+
+หมายเหตุ
+
+- [...]
+```
+
+Spent Time Comment:
+
+- เวลา: [x] ชม.
+- Activity: [Development/Testing/Support/Research]
+- รายละเอียด:
+
+```textile
+[รายละเอียดสำหรับ comment ตอนลงเวลา]
+```
+
+### Security Review
+
+Issue Note:
+
+```textile
+สรุปการแก้ไข Security Review
+
+- ประเด็นที่พบ: [...]
+- การแก้ไข: [...]
+- ไฟล์/ส่วนที่ปรับ: [...]
+
+การตรวจสอบ
+
+- Security Review: [pass/fail]
+- ตรวจ syntax/test: [...]
+
+หมายเหตุ
+
+- [...]
+```
+
+Spent Time Comment:
+
+- เวลา: [x] ชม.
+- Activity: [Development/Testing/Support/Research]
+- รายละเอียด:
+
+```textile
+[รายละเอียดสำหรับ comment ตอนลงเวลา]
+```
+
+### Feature / Enhancement
+
+Issue Note:
+
+```textile
+สรุปการพัฒนา
+
+- เพิ่ม/ปรับฟีเจอร์: [...]
+- ส่วนที่เกี่ยวข้อง: [...]
+- ผลลัพธ์: [...]
+
+การตรวจสอบ
+
+- ทดสอบ flow หลัก: [...]
+- ผล: [...]
+
+หมายเหตุ
+
+- [...]
+```
+
+Spent Time Comment:
+
+- เวลา: [x] ชม.
+- Activity: [Development/Testing/Support/Research]
+- รายละเอียด:
+
+```textile
+[รายละเอียดสำหรับ comment ตอนลงเวลา]
+```
+
+### Time Entry Comment
+
+```textile
+[รายละเอียดสำหรับ comment ตอนลงเวลา]
+```
 
 ## Script Invocation
 
